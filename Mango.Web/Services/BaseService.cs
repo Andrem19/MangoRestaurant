@@ -1,7 +1,13 @@
 ﻿using Mango.Web.Models;
 using Mango.Web.Services.IServices;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mango.Web.Services
 {
@@ -9,6 +15,7 @@ namespace Mango.Web.Services
     {
         public ResponseDto responseModel { get; set; }
         public IHttpClientFactory httpClient { get; set; }
+
         public BaseService(IHttpClientFactory httpClient)
         {
             this.responseModel = new ResponseDto();
@@ -19,7 +26,7 @@ namespace Mango.Web.Services
         {
             try
             {
-                var client = httpClient.CreateClient("MongoApi");
+                var client = httpClient.CreateClient("MangoAPI");
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
                 message.RequestUri = new Uri(apiRequest.Url);
@@ -51,20 +58,19 @@ namespace Mango.Web.Services
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
                 var apiResponseDto = JsonConvert.DeserializeObject<T>(apiContent);
                 return apiResponseDto;
+
             }
             catch (Exception e)
             {
                 var dto = new ResponseDto
                 {
-                    DisplayMassage = "Error",
                     ErrorMessages = new List<string> { Convert.ToString(e.Message) },
-                    IsSuccess = false,
+                    IsSuccess = false
                 };
                 var res = JsonConvert.SerializeObject(dto);
                 var apiResponseDto = JsonConvert.DeserializeObject<T>(res);
                 return apiResponseDto;
             }
-
         }
 
         public void Dispose()

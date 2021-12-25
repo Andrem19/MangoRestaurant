@@ -15,7 +15,7 @@ namespace Mango.Services.ProductAPI.Controllers
             _productRepository = productRepository;
             this._response = new ResponseDto();
         }
-        
+
         [HttpGet]
         public async Task<object> Get()
         {
@@ -27,7 +27,7 @@ namespace Mango.Services.ProductAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages 
+                _response.ErrorMessages
                     = new List<string>() { ex.ToString() };
             }
             return _response;
@@ -82,6 +82,7 @@ namespace Mango.Services.ProductAPI.Controllers
             return _response;
         }
         [HttpDelete]
+        [Route("{id}")]
         public async Task<object> Delete(int id)
         {
             try
